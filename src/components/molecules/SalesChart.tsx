@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   BarChart,
   Bar,
@@ -11,73 +11,113 @@ import {
   Cell,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
+  Legend,
 } from "recharts";
 
-import Button from "../atoms/Button";
+const data = [
+  { month: "Jan", sales: 400 },
+  { month: "Feb", sales: 300 },
+  { month: "Mar", sales: 200 },
+  { month: "Apr", sales: 278 },
+  { month: "May", sales: 189 },
+  { month: "Jun", sales: 239 },
+];
 
-interface SalesChartProps {
-  data: { year: number; sales: number }[];
-}
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#845EC2", "#FF6F91"];
 
-const COLORS = ["#8884d8", "#82ca9d", "#ffc658"];
-
-const SalesChart: React.FC<SalesChartProps> = ({ data }) => {
+export default function SalesChart() {
   const [chartType, setChartType] = useState<"bar" | "line" | "pie">("bar");
+  const [threshold, setThreshold] = useState<number>(0);
 
-  if (!data || data.length === 0) return <p>No data available</p>;
+  // Filter sales above threshold
+  const filteredData = data.filter((item) => item.sales >= threshold);
 
   return (
-    <div className="w-full">
-      <div className="flex gap-2 mb-4">
-        <Button onClick={() => setChartType("bar")}>Bar</Button>
-        <Button onClick={() => setChartType("line")}>Line</Button>
-        <Button onClick={() => setChartType("pie")}>Pie</Button>
+    <div className="bg-white p-6 rounded-2xl shadow-md">
+      <h2 className="text-xl font-semibold mb-4">📊 Sales Chart</h2>
+
+      {/* Filter input */}
+      <div className="flex gap-4 mb-4">
+        <input
+          type="number"
+          placeholder="Enter sales threshold"
+          value={threshold}
+          onChange={(e) => setThreshold(Number(e.target.value))}
+          className="border p-2 rounded-md w-56"
+        />
+        <div className="flex gap-2">
+          <button
+            onClick={() => setChartType("bar")}
+            className={`px-4 py-2 rounded-md ${
+              chartType === "bar" ? "bg-blue-600 text-white" : "bg-gray-200"
+            }`}
+          >
+            Bar
+          </button>
+          <button
+            onClick={() => setChartType("line")}
+            className={`px-4 py-2 rounded-md ${
+              chartType === "line" ? "bg-green-600 text-white" : "bg-gray-200"
+            }`}
+          >
+            Line
+          </button>
+          <button
+            onClick={() => setChartType("pie")}
+            className={`px-4 py-2 rounded-md ${
+              chartType === "pie" ? "bg-pink-600 text-white" : "bg-gray-200"
+            }`}
+          >
+            Pie
+          </button>
+        </div>
       </div>
 
-      <ResponsiveContainer width="100%" height={400}>
-        {chartType === "bar" ? (
-          <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="year" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="sales" fill="#8884d8" />
-          </BarChart>
-        ) : chartType === "line" ? (
-          <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="year" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="sales" stroke="#82ca9d" />
-          </LineChart>
-        ) : (
-          <PieChart>
-            <Pie
-              data={data}
-              dataKey="sales"
-              nameKey="year"
-              cx="50%"
-              cy="50%"
-              outerRadius={100}
-              label
-            >
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        )}
-      </ResponsiveContainer>
+      {/* Chart rendering */}
+      <div className="w-full h-80">
+        <ResponsiveContainer>
+          {chartType === "bar" && (
+            <BarChart data={filteredData}>
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="sales" fill="#8884d8" />
+            </BarChart>
+          )}
+
+          {chartType === "line" && (
+            <LineChart data={filteredData}>
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="sales" stroke="#82ca9d" />
+            </LineChart>
+          )}
+
+          {chartType === "pie" && (
+            <PieChart>
+              <Pie
+                data={filteredData}
+                dataKey="sales"
+                nameKey="month"
+                outerRadius={120}
+                fill="#8884d8"
+                label
+              >
+                {filteredData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          )}
+        </ResponsiveContainer>
+      </div>
     </div>
   );
-};
-
-export default SalesChart;
+}
