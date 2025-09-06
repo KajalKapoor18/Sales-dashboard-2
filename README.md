@@ -24,18 +24,17 @@ It lets users **visualize and filter sales data** with a clean and responsive UI
 
 ---
 
-## 📂 Project Structure  
 Sales-dashboard-2/
-│── public/ # Static assets (icons, svg, etc.)
+│── public/              # Static assets (icons, svg, etc.)
 │── src/
-│ ├── app/ # Next.js App Router pages
-│ │ └── dashboard/ # Dashboard page (page.tsx)
-│ ├── components/ # Reusable UI components
-│ │ ├── atoms/ # Small UI elements (Button, Input, etc.)
-│ │ ├── molecules/ # Chart components
-│ │ └── organisms/ # Complex UI layouts
-│ ├── styles/ # Global styles
-│ └── utils/ # Helper functions & API calls
-│── package.json # Project dependencies & scripts
-│── tailwind.config.js # Tailwind configuration
-│── tsconfig.json # TypeScript configuration
+│   ├── app/             # Next.js App Router pages
+│   │   └── dashboard/   # Dashboard page (page.tsx)
+│   ├── components/      # Reusable UI components
+│   │   ├── atoms/       # Small UI elements (Button, Input, etc.)
+│   │   ├── molecules/   # Chart components
+│   │   └── organisms/   # Complex UI layouts
+│   ├── styles/          # Global styles
+│   └── utils/           # Helper functions & API calls
+│── package.json         # Project dependencies & scripts
+│── tailwind.config.js   # Tailwind configuration
+│── tsconfig.json        # TypeScript configuration
